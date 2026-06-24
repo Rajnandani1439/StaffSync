@@ -28,46 +28,40 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form>
+                    <div th:if="${errorMessage}" class="alert alert-danger py-2 mb-3" style="font-size: 13px;">
+                        <i class="bi bi-exclamation-circle me-1"></i> <span th:text="${errorMessage}">Error</span>
+                    </div>
+                    <form th:action="@{/attendance/save}" th:object="${attendance}" method="post">
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <label class="form-label">Employee <span style="color: #ef4444;">*</span></label>
-                                <select class="form-select">
-                                    <option>Select employee...</option>
-                                    <option>Sarah Johnson — Engineering</option>
-                                    <option>Michael Chen — Marketing</option>
-                                    <option>Emily Rodriguez — Finance</option>
-                                    <option>David Kim — Engineering</option>
-                                    <option>Lisa Thompson — HR</option>
-                                    <option>James Wilson — Operations</option>
-                                    <option>Anna Martinez — Engineering</option>
-                                    <option>Robert Brown — Marketing</option>
+                                <select class="form-select" name="employeeId" required>
+                                    <option value="">Select employee...</option>
+                                    <option th:each="emp : ${employees}" th:value="${emp.id}"
+                                            th:text="${emp.firstName + ' ' + emp.lastName + ' — ' + emp.department}">Sarah Johnson</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Date <span style="color: #ef4444;">*</span></label>
-                                <input type="date" class="form-control" th:value="${today}">
+                                <input type="date" class="form-control" th:field="*{date}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Check In</label>
-                                <input type="time" class="form-control" value="09:00">
+                                <input type="time" class="form-control" th:field="*{checkIn}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Check Out</label>
-                                <input type="time" class="form-control" value="17:00">
+                                <input type="time" class="form-control" th:field="*{checkOut}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Status <span style="color: #ef4444;">*</span></label>
-                                <select class="form-select">
-                                    <option>Present</option>
-                                    <option>Absent</option>
-                                    <option>Late</option>
-                                    <option>Half Day</option>
+                                <select class="form-select" th:field="*{status}">
+                                    <option value="">Select status</option>
+                                    <option value="Present">Present</option>
+                                    <option value="Absent">Absent</option>
+                                    <option value="Late">Late</option>
+                                    <option value="Half Day">Half Day</option>
                                 </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Remarks</label>
-                                <input type="text" class="form-control" placeholder="Optional notes">
                             </div>
                             <div class="col-12 d-flex gap-2 justify-content-end pt-3 border-top">
                                 <a th:href="@{/attendance}" class="btn btn-secondary">Cancel</a>

@@ -24,7 +24,7 @@
                         </ol>
                     </nav>
                     <h3>Monthly Attendance Report</h3>
-                    <p>June 2026 — Summary of attendance records</p>
+                    <p><span th:text="${month}">2026-06</span> — Summary of attendance records</p>
                 </div>
                 <div>
                     <button class="btn btn-outline-primary" onclick="window.print()">
@@ -79,12 +79,12 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="progress flex-grow-1" style="height: 6px;">
                                                 <div class="progress-bar" role="progressbar"
-                                                     th:style="${'width: ' + (row.total > 0 ? (row.present * 100 / row.total) : 0) + '%'}"
-                                                     th:classappend="${(row.present * 100 / row.total) >= 90 ? 'bg-success' : (row.present * 100 / row.total) >= 75 ? 'bg-warning' : 'bg-danger'}"
+                                                     th:style="${'width: ' + (row.total > 0 ? (row.present * 100.0 / row.total) : 0) + '%'}"
+                                                     th:classappend="${row.total > 0 ? ((row.present * 100.0 / row.total) >= 90 ? 'bg-success' : (row.present * 100.0 / row.total) >= 75 ? 'bg-warning' : 'bg-danger') : 'bg-danger'}"
                                                      style="width: 95%;"></div>
                                             </div>
                                             <span style="font-size: 12px; font-weight: 600; min-width: 36px;"
-                                                  th:text="${row.total > 0 ? #numbers.formatDecimal(row.present * 100 / row.total, 0, 2) : 0} + '%'">95%</span>
+                                                  th:text="${row.total > 0 ? #numbers.formatDecimal(row.present * 100.0 / row.total, 0, 2) : 0} + '%'">95%</span>
                                         </div>
                                     </td>
                                 </tr>

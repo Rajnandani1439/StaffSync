@@ -275,13 +275,26 @@ Application secured with role-based access.
 
 ## Sprint 5 - Attendance Module
 
-Status: Pending
+Status: Completed
 
-Features:
+Completed Features:
 
-* Mark Attendance
-* View Attendance
-* Attendance History
+* Attendance List — reads from PostgreSQL via `AttendanceRepository`
+* Mark Attendance — form saves record with duplicate date+employee validation
+* Attendance Report — monthly summary with present/absent/late/half-day counts and percentage
+* Today's stats cards (Present, Late, Absent, Half Day)
+* ADMIN: full attendance access
+* EMPLOYEE: view own attendance only
+
+Files Modified:
+
+* `controller/AttendanceController.java` — replaced mock data with repository-backed CRUD
+* `repository/AttendanceRepository.java` — added queries: by date, by employee, duplicate check, status counts
+* `repository/EmployeeRepository.java` — added `findByUserId` for EMPLOYEE role mapping
+* `security/SecurityConfig.java` — attendance routes split: mark/save/report require ADMIN, list requires auth
+* `templates/attendance/list.html` — entity-based fields, dynamic stat cards
+* `templates/attendance/mark.html` — form binding, employee dropdown from DB, duplicate error display
+* `templates/attendance/report.html` — dynamic month display, fixed percentage calculation
 
 Deliverable:
 
@@ -440,7 +453,8 @@ Sprint 1: Complete
 Sprint 2: Complete
 Sprint 3: Complete
 Sprint 4: Complete
+Sprint 5: Complete
 
 ## NEXT SPRINT
 
-Sprint 5 – Attendance Module
+Sprint 6 – Leave Module

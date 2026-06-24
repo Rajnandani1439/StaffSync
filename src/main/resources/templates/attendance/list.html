@@ -35,12 +35,12 @@
                 </div>
             </div>
 
-            <div class="row g-4 mb-4">
+            <div class="row g-4 mb-4" sec:authorize="hasRole('ADMIN')">
                 <div class="col-md-3">
                     <div class="card stat-card green">
                         <div class="card-body py-3">
                             <div class="stat-label">Present</div>
-                            <div class="stat-value" style="font-size: 22px;">6</div>
+                            <div class="stat-value" style="font-size: 22px;" th:text="${presentCount}">6</div>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                     <div class="card stat-card" style="--bs-card-color: #f59e0b;">
                         <div class="card-body py-3">
                             <div class="stat-label">Late</div>
-                            <div class="stat-value" style="font-size: 22px; color: #f59e0b;">2</div>
+                            <div class="stat-value" style="font-size: 22px; color: #f59e0b;" th:text="${lateCount}">2</div>
                         </div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                     <div class="card stat-card" style="--bs-card-color: #ef4444;">
                         <div class="card-body py-3">
                             <div class="stat-label">Absent</div>
-                            <div class="stat-value" style="font-size: 22px; color: #ef4444;">1</div>
+                            <div class="stat-value" style="font-size: 22px; color: #ef4444;" th:text="${absentCount}">1</div>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     <div class="card stat-card purple">
                         <div class="card-body py-3">
                             <div class="stat-label">Half Day</div>
-                            <div class="stat-value" style="font-size: 22px;">1</div>
+                            <div class="stat-value" style="font-size: 22px;" th:text="${halfDayCount}">1</div>
                         </div>
                     </div>
                 </div>
@@ -75,11 +75,11 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div class="d-flex gap-3 align-items-center">
                             <h5 style="font-weight: 700; color: #0f172a; margin: 0;">
-                                <i class="bi bi-calendar3 me-2" style="color: var(--primary);"></i>June 23, 2026
+                                <i class="bi bi-calendar3 me-2" style="color: var(--primary);"></i><span th:text="${today}">2026-06-23</span>
                             </h5>
                         </div>
                         <div style="font-size: 13px; color: #64748b;">
-                            Total: 248 &middot; Marked: 140
+                            Total records: <span th:text="${#lists.size(records)}">0</span>
                         </div>
                     </div>
 
@@ -99,10 +99,10 @@
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="avatar-circle avatar-sm" style="background: #1a56db;"
-                                                 th:style="${'background: ' + (rec.id % 2 == 0 ? '#7c3aed' : '#1a56db')}">
-                                                <span th:text="${#strings.substring(rec.employee, 0, 1) + #strings.substring(#arrays.asEnumerable(#strings.split(rec.employee, ' '))[1], 0, 1)}">SJ</span>
+                                                 th:style="${'background: ' + (rec.employee.id % 2 == 0 ? '#7c3aed' : '#1a56db')}">
+                                                <span th:text="${#strings.substring(rec.employee.firstName, 0, 1) + #strings.substring(rec.employee.lastName, 0, 1)}">SJ</span>
                                             </div>
-                                            <span style="font-weight: 500;" th:text="${rec.employee}">Sarah Johnson</span>
+                                            <span style="font-weight: 500;" th:text="${rec.employee.firstName + ' ' + rec.employee.lastName}">Sarah Johnson</span>
                                         </div>
                                     </td>
                                     <td th:text="${rec.date}">2026-06-23</td>

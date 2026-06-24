@@ -417,3 +417,24 @@ Project is considered complete when:
 * Viva demo can be completed in under 10 minutes
 
 END OF FILE
+
+## CURRENT STATUS
+
+Sprint 1: Complete
+Sprint 2: Complete
+
+## NEXT SPRINT
+
+Sprint 3 – Employee CRUD
+
+Tasks:
+- Employee List from DB
+- Add Employee
+- View Employee
+- Edit Employee
+- Delete Employee
+
+Definition of Done:
+- CRUD working
+- PostgreSQL updated
+- Screenshots captured

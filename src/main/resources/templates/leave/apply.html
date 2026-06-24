@@ -30,38 +30,37 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
-                            <form>
+                            <div th:if="${errorMessage}" class="alert alert-danger py-2 mb-3" style="font-size: 13px;">
+                                <i class="bi bi-exclamation-circle me-1"></i> <span th:text="${errorMessage}">Error</span>
+                            </div>
+                            <div th:if="${successMessage}" class="alert alert-success py-2 mb-3" style="font-size: 13px;">
+                                <i class="bi bi-check-circle me-1"></i> <span th:text="${successMessage}">Success</span>
+                            </div>
+                            <form th:action="@{/leave/save}" th:object="${leaveRequest}" method="post">
                                 <div class="row g-4">
                                     <div class="col-md-6">
-                                        <label class="form-label">Employee <span style="color: #ef4444;">*</span></label>
-                                        <select class="form-select">
-                                            <option>Select employee...</option>
-                                            <option>Sarah Johnson — Engineering</option>
-                                            <option>Michael Chen — Marketing</option>
-                                            <option>Emily Rodriguez — Finance</option>
-                                            <option selected>Anna Martinez — Engineering</option>
+                                        <label class="form-label">Leave Type <span style="color: #ef4444;">*</span></label>
+                                        <select class="form-select" th:field="*{leaveType}" required>
+                                            <option value="">Select leave type</option>
+                                            <option value="Sick Leave">Sick Leave</option>
+                                            <option value="Casual Leave">Casual Leave</option>
+                                            <option value="Vacation">Vacation</option>
+                                            <option value="Other">Other</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Leave Type <span style="color: #ef4444;">*</span></label>
-                                        <select class="form-select">
-                                            <option>Sick Leave</option>
-                                            <option>Casual Leave</option>
-                                            <option>Vacation</option>
-                                            <option>Other</option>
-                                        </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Start Date <span style="color: #ef4444;">*</span></label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" th:field="*{startDate}" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">End Date <span style="color: #ef4444;">*</span></label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" th:field="*{endDate}" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Reason <span style="color: #ef4444;">*</span></label>
-                                        <textarea class="form-control" rows="4" placeholder="Please provide a detailed reason for your leave request..."></textarea>
+                                        <textarea class="form-control" rows="4" th:field="*{reason}" placeholder="Please provide a detailed reason for your leave request..." required></textarea>
                                     </div>
                                     <div class="col-12 d-flex gap-2 justify-content-end pt-3 border-top">
                                         <a th:href="@{/leave}" class="btn btn-secondary">Cancel</a>

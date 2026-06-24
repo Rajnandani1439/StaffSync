@@ -24,7 +24,7 @@
                         </ol>
                     </nav>
                     <h3>Salary Slip</h3>
-                    <p th:text="${payslip.month}">June 2026</p>
+                    <p th:text="${payslip.payPeriod}">June 2026</p>
                 </div>
                 <button class="btn btn-outline-primary no-print" onclick="window.print()">
                     <i class="bi bi-printer me-1"></i> Print Payslip
@@ -48,8 +48,8 @@
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <h5 style="font-weight: 700; color: var(--primary); margin: 0;" th:text="${payslip.month}">June 2026</h5>
-                                <span class="badge-status active" th:text="${payslip.status}">Paid</span>
+                                <h5 style="font-weight: 700; color: var(--primary); margin: 0;" th:text="${payslip.payPeriod}">June 2026</h5>
+                                <span class="badge-status active" th:text="${payslip.status}">PAID</span>
                             </div>
                         </div>
 
@@ -57,18 +57,16 @@
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <table style="font-size: 14px; width: 100%;">
-                                    <tr><td style="color: #64748b; padding: 4px 0; width: 120px;">Employee Name</td><td style="font-weight: 600;" th:text="${payslip.employee}">Sarah Johnson</td></tr>
-                                    <tr><td style="color: #64748b; padding: 4px 0;">Employee ID</td><td style="font-weight: 600;" th:text="${payslip.employeeId}">EMP-001</td></tr>
-                                    <tr><td style="color: #64748b; padding: 4px 0;">Department</td><td style="font-weight: 600;" th:text="${payslip.department}">Engineering</td></tr>
-                                    <tr><td style="color: #64748b; padding: 4px 0;">Designation</td><td style="font-weight: 600;" th:text="${payslip.designation}">Senior Developer</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0; width: 120px;">Employee Name</td><td style="font-weight: 600;" th:text="${payslip.employee.firstName + ' ' + payslip.employee.lastName}">Sarah Johnson</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Employee ID</td><td style="font-weight: 600;" th:text="${'EMP-' + payslip.employee.id}">EMP-001</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Department</td><td style="font-weight: 600;" th:text="${payslip.employee.department}">Engineering</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Designation</td><td style="font-weight: 600;" th:text="${payslip.employee.designation}">Senior Developer</td></tr>
                                 </table>
                             </div>
                             <div class="col-md-6">
                                 <table style="font-size: 14px; width: 100%;">
-                                    <tr><td style="color: #64748b; padding: 4px 0; width: 120px;">Pay Period</td><td style="font-weight: 600;" th:text="${payslip.month}">June 2026</td></tr>
-                                    <tr><td style="color: #64748b; padding: 4px 0;">Working Days</td><td style="font-weight: 600;" th:text="${payslip.workingDays}">22</td></tr>
-                                    <tr><td style="color: #64748b; padding: 4px 0;">Paid Days</td><td style="font-weight: 600;" th:text="${payslip.paidDays}">22</td></tr>
-                                    <tr><td style="color: #64748b; padding: 4px 0;">Paid Date</td><td style="font-weight: 600;" th:text="${payslip.paidDate}">2026-06-25</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0; width: 120px;">Pay Period</td><td style="font-weight: 600;" th:text="${payslip.payPeriod}">June 2026</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Paid Date</td><td style="font-weight: 600;" th:text="${payslip.payDate}">2026-06-25</td></tr>
                                 </table>
                             </div>
                         </div>
@@ -86,7 +84,7 @@
                             <tbody>
                                 <tr>
                                     <td>Basic Salary</td>
-                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.basic, 0, 'COMMA', 0, 'POINT')}">85,000</td>
+                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.basicSalary, 0, 'COMMA', 0, 'POINT')}">85,000</td>
                                     <td>Income Tax</td>
                                     <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.deductions, 0, 'COMMA', 0, 'POINT')}">4,250</td>
                                 </tr>
@@ -110,7 +108,7 @@
                                 </tr>
                                 <tr class="total-row">
                                     <td style="font-weight: 700;">Gross Earnings</td>
-                                    <td style="text-align: right; font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(payslip.basic + payslip.allowances, 0, 'COMMA', 0, 'POINT')}">$93,500</td>
+                                    <td style="text-align: right; font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(payslip.basicSalary + payslip.allowances, 0, 'COMMA', 0, 'POINT')}">$93,500</td>
                                     <td style="font-weight: 700;">Total Deductions</td>
                                     <td style="text-align: right; font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(payslip.deductions, 0, 'COMMA', 0, 'POINT')}">$4,250</td>
                                 </tr>
@@ -120,18 +118,7 @@
                         <!-- Net Salary -->
                         <div style="background: var(--primary); color: #fff; border-radius: 12px; padding: 20px; text-align: center; margin-top: 20px;">
                             <div style="font-size: 14px; opacity: 0.9;">Net Salary</div>
-                            <div style="font-size: 36px; font-weight: 800;" th:text="${'$' + #numbers.formatDecimal(payslip.net, 0, 'COMMA', 0, 'POINT')}">$89,250</div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="d-flex justify-content-between mt-4" style="font-size: 13px; color: #94a3b8;">
-                            <div>
-                                <strong>Bank:</strong> <span th:text="${payslip.bankName}">National Bank</span> &middot;
-                                <strong>A/C:</strong> <span th:text="${payslip.accountNo}">XXXX-1234</span>
-                            </div>
-                            <div>
-                                <strong>PAN:</strong> <span th:text="${payslip.panNumber}">ABCDE1234F</span>
-                            </div>
+                            <div style="font-size: 36px; font-weight: 800;" th:text="${'$' + #numbers.formatDecimal(payslip.netSalary, 0, 'COMMA', 0, 'POINT')}">$89,250</div>
                         </div>
 
                         <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">

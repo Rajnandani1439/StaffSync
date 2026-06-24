@@ -38,4 +38,7 @@ public class Payroll {
 
     @Column(name = "pay_period")
     private String payPeriod;
+
+    @Column(nullable = false)
+    private String status;
 }

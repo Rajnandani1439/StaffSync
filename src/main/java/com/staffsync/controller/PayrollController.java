@@ -1,26 +1,58 @@
 package com.staffsync.controller;
 
+import com.staffsync.model.Employee;
+import com.staffsync.model.Payroll;
+import com.staffsync.model.User;
+import com.staffsync.repository.EmployeeRepository;
+import com.staffsync.repository.PayrollRepository;
+import com.staffsync.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/payroll")
 public class PayrollController {
 
+    private final PayrollRepository payrollRepository;
+    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
+
+    public PayrollController(PayrollRepository payrollRepository,
+                             EmployeeRepository employeeRepository,
+                             UserRepository userRepository) {
+        this.payrollRepository = payrollRepository;
+        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
+    }
+
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model, Authentication auth) {
         model.addAttribute("currentPage", "payroll");
-        List<Map<String, Object>> payrolls = new ArrayList<>();
-        payrolls.add(Map.of("id", 1, "employee", "Sarah Johnson", "department", "Engineering", "month", "June 2026", "basic", BigDecimal.valueOf(85000), "allowances", BigDecimal.valueOf(8500), "deductions", BigDecimal.valueOf(4250), "net", BigDecimal.valueOf(89250), "status", "Paid", "paidDate", "2026-06-25"));
-        payrolls.add(Map.of("id", 2, "employee", "Michael Chen", "department", "Marketing", "month", "June 2026", "basic", BigDecimal.valueOf(72000), "allowances", BigDecimal.valueOf(7200), "deductions", BigDecimal.valueOf(3600), "net", BigDecimal.valueOf(75600), "status", "Paid", "paidDate", "2026-06-25"));
-        payrolls.add(Map.of("id", 3, "employee", "Emily Rodriguez", "department", "Finance", "month", "June 2026", "basic", BigDecimal.valueOf(68000), "allowances", BigDecimal.valueOf(6800), "deductions", BigDecimal.valueOf(3400), "net", BigDecimal.valueOf(71400), "status", "Paid", "paidDate", "2026-06-24"));
-        payrolls.add(Map.of("id", 4, "employee", "David Kim", "department", "Engineering", "month", "June 2026", "basic", BigDecimal.valueOf(78000), "allowances", BigDecimal.valueOf(7800), "deductions", BigDecimal.valueOf(3900), "net", BigDecimal.valueOf(81900), "status", "Pending", "paidDate", "-"));
-        payrolls.add(Map.of("id", 5, "employee", "Lisa Thompson", "department", "HR", "month", "June 2026", "basic", BigDecimal.valueOf(75000), "allowances", BigDecimal.valueOf(7500), "deductions", BigDecimal.valueOf(3750), "net", BigDecimal.valueOf(78750), "status", "Paid", "paidDate", "2026-06-24"));
-        payrolls.add(Map.of("id", 6, "employee", "James Wilson", "department", "Operations", "month", "June 2026", "basic", BigDecimal.valueOf(82000), "allowances", BigDecimal.valueOf(8200), "deductions", BigDecimal.valueOf(4100), "net", BigDecimal.valueOf(86100), "status", "Pending", "paidDate", "-"));
+        List<Payroll> payrolls;
+
+        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            payrolls = payrollRepository.findAllByOrderByPayDateDesc();
+        } else {
+            User user = userRepository.findByUsername(auth.getName()).orElse(null);
+            if (user != null) {
+                Employee emp = employeeRepository.findByUserId(user.getId()).orElse(null);
+                if (emp != null) {
+                    payrolls = payrollRepository.findByEmployeeIdOrderByPayDateDesc(emp.getId());
+                } else {
+                    payrolls = List.of();
+                }
+            } else {
+                payrolls = List.of();
+            }
+        }
+
         model.addAttribute("payrolls", payrolls);
         return "payroll/list";
     }
@@ -28,31 +60,66 @@ public class PayrollController {
     @GetMapping("/generate")
     public String generateForm(Model model) {
         model.addAttribute("currentPage", "payroll");
+        model.addAttribute("payroll", new Payroll());
+        model.addAttribute("employees", employeeRepository.findAll());
         return "payroll/generate";
     }
 
+    @PostMapping("/save")
+    public String save(@RequestParam Long employeeId,
+                       @RequestParam BigDecimal basicSalary,
+                       @RequestParam BigDecimal allowances,
+                       @RequestParam BigDecimal deductions,
+                       @RequestParam String payPeriod,
+                       RedirectAttributes redirect) {
+        if (basicSalary.compareTo(BigDecimal.ZERO) < 0
+                || allowances.compareTo(BigDecimal.ZERO) < 0
+                || deductions.compareTo(BigDecimal.ZERO) < 0) {
+            redirect.addFlashAttribute("errorMessage", "Salary, allowances, and deductions must be >= 0.");
+            return "redirect:/payroll/generate";
+        }
+
+        Employee employee = employeeRepository.findById(employeeId).orElse(null);
+        if (employee == null) {
+            redirect.addFlashAttribute("errorMessage", "Employee not found.");
+            return "redirect:/payroll/generate";
+        }
+
+        Payroll payroll = new Payroll();
+        payroll.setEmployee(employee);
+        payroll.setBasicSalary(basicSalary);
+        payroll.setAllowances(allowances);
+        payroll.setDeductions(deductions);
+        payroll.setNetSalary(basicSalary.add(allowances).subtract(deductions));
+        payroll.setPayPeriod(payPeriod);
+        payroll.setPayDate(LocalDate.now());
+        payroll.setStatus("PAID");
+        payrollRepository.save(payroll);
+
+        redirect.addFlashAttribute("successMessage", "Payroll generated successfully.");
+        return "redirect:/payroll";
+    }
+
     @GetMapping("/payslip/{id}")
-    public String payslip(@PathVariable Integer id, Model model) {
+    public String payslip(@PathVariable Long id, Model model, Authentication auth) {
+        Payroll payroll = payrollRepository.findById(id).orElse(null);
+        if (payroll == null) {
+            return "redirect:/payroll";
+        }
+
+        if (auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            User user = userRepository.findByUsername(auth.getName()).orElse(null);
+            if (user == null) {
+                return "redirect:/payroll";
+            }
+            Employee emp = employeeRepository.findByUserId(user.getId()).orElse(null);
+            if (emp == null || !emp.getId().equals(payroll.getEmployee().getId())) {
+                return "redirect:/payroll";
+            }
+        }
+
         model.addAttribute("currentPage", "payroll");
-        Map<String, Object> payslip = new HashMap<>();
-        payslip.put("id", 1);
-        payslip.put("employee", "Sarah Johnson");
-        payslip.put("department", "Engineering");
-        payslip.put("designation", "Senior Developer");
-        payslip.put("employeeId", "EMP-001");
-        payslip.put("month", "June 2026");
-        payslip.put("basic", BigDecimal.valueOf(85000));
-        payslip.put("allowances", BigDecimal.valueOf(8500));
-        payslip.put("deductions", BigDecimal.valueOf(4250));
-        payslip.put("net", BigDecimal.valueOf(89250));
-        payslip.put("status", "Paid");
-        payslip.put("paidDate", "2026-06-25");
-        payslip.put("bankName", "National Bank");
-        payslip.put("accountNo", "XXXX-XXXX-1234");
-        payslip.put("panNumber", "ABCDE1234F");
-        payslip.put("workingDays", 22);
-        payslip.put("paidDays", 22);
-        model.addAttribute("payslip", payslip);
+        model.addAttribute("payslip", payroll);
         return "payroll/payslip";
     }
 }

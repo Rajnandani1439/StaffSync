@@ -44,14 +44,14 @@
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="avatar-circle" style="background: #0ea5e9;"
                                      th:style="${'background: ' + (leave.id % 2 == 0 ? '#f59e0b' : leave.id % 3 == 0 ? '#7c3aed' : '#0ea5e9')}">
-                                    <span th:text="${#strings.substring(leave.employee, 0, 1)}">A</span>
+                                    <span th:text="${#strings.substring(leave.employee.firstName, 0, 1)}">A</span>
                                 </div>
                                 <div>
-                                    <div style="font-weight: 600; color: #0f172a;" th:text="${leave.employee}">Anna Martinez</div>
+                                    <div style="font-weight: 600; color: #0f172a;" th:text="${leave.employee.firstName + ' ' + leave.employee.lastName}">Anna Martinez</div>
                                     <div style="font-size: 13px; color: #64748b;">
-                                        <span th:text="${leave.type}">Sick</span> &middot;
-                                        <span th:text="${leave.from}">Jun 20</span> to <span th:text="${leave.to}">Jun 24</span> &middot;
-                                        Applied <span th:text="${leave.applied}">Jun 18</span>
+                                        <span th:text="${leave.leaveType}">Sick</span> &middot;
+                                        <span th:text="${leave.startDate}">Jun 20</span> to <span th:text="${leave.endDate}">Jun 24</span> &middot;
+                                        Applied <span th:text="${#temporals.format(leave.appliedOn, 'MMM dd')}">Jun 18</span>
                                     </div>
                                     <div style="font-size: 13px; color: #94a3b8; margin-top: 4px;">
                                         <i class="bi bi-chat-quote me-1"></i><span th:text="${leave.reason}">Medical appointment</span>
@@ -59,15 +59,19 @@
                                 </div>
                             </div>
                             <div class="d-flex gap-2 align-items-center">
-                                <span class="badge-status" th:classappend="${leave.status == 'Approved' ? 'active' : leave.status == 'Pending' ? 'pending' : 'inactive'}"
-                                      th:text="${leave.status}">Pending</span>
-                                <div class="d-flex gap-1" th:if="${leave.status == 'Pending'}">
-                                    <button class="btn btn-sm btn-success" title="Approve">
-                                        <i class="bi bi-check-lg"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" title="Reject">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
+                                <span class="badge-status" th:classappend="${leave.status == 'APPROVED' ? 'active' : leave.status == 'PENDING' ? 'pending' : 'inactive'}"
+                                      th:text="${leave.status}">PENDING</span>
+                                <div class="d-flex gap-1" sec:authorize="hasRole('ADMIN')" th:if="${leave.status == 'PENDING'}">
+                                    <form th:action="@{/leave/{id}/approve(id=${leave.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-success" title="Approve">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/leave/{id}/reject(id=${leave.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Reject">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

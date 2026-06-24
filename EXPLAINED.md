@@ -304,14 +304,36 @@ Attendance records stored in PostgreSQL.
 
 ## Sprint 6 - Leave Module
 
-Status: Pending
+Status: Completed
 
-Features:
+Completed Features:
 
-* Apply Leave
-* Approve Leave
-* Reject Leave
-* Leave History
+* Apply Leave — form auto-assigns logged-in employee (via User → Employee mapping)
+* Approve Leave — ADMIN-only POST endpoint, updates status to APPROVED
+* Reject Leave — ADMIN-only POST endpoint, updates status to REJECTED
+* Leave History — ADMIN sees all leaves; EMPLOYEE sees own leaves only
+* Date validation — end date must be ≥ start date
+* Server-side validation with flash error display
+
+Files Modified:
+
+* `controller/LeaveController.java` — replaced mock data with DB-backed CRUD:
+  - `list()`: ADMIN sees all via `findAllByOrderByStartDateDesc()`, EMPLOYEE sees own via `findByEmployeeIdOrderByStartDateDesc()`
+  - `save()`: validates dates, looks up Employee from logged-in User, sets status=PENDING and appliedOn=now
+  - `approve()`: sets status=APPROVED
+  - `reject()`: sets status=REJECTED
+* `repository/LeaveRequestRepository.java` — added `findAllByOrderByStartDateDesc()` and `findByEmployeeIdOrderByStartDateDesc()`
+* `security/SecurityConfig.java` — leave routes: approve/reject require ADMIN, all other leave paths require authentication
+* `config/DataSeeder.java` — now creates Employee record linked to admin user (required for leave submission)
+* `templates/leave/list.html` — replaced mock field references with entity fields (`leave.employee.firstName`, `leave.leaveType`, `leave.startDate`, `leave.endDate`, `leave.appliedOn`, `leave.status`, `leave.reason`); added approve/reject POST forms with CSRF, visible only to ADMIN via `sec:authorize`
+* `templates/leave/apply.html` — form binding with `th:action`, `th:object`, `th:field`; removed employee dropdown (auto-assigned); added error/success flash message alerts
+* `templates/fragments/sidebar.html` — removed ADMIN-only restriction on Leave nav link so EMPLOYEE can access
+
+Important Notes:
+
+* Leave auto-assigns the logged-in employee via `User.findByUsername` → `Employee.findByUserId` — no employee selector in the form
+* CSRF is enabled globally; all POST forms include `_csrf` (auto-injected with `th:action` + `method="post"`)
+* The admin user must have a linked Employee record in the database (handled by DataSeeder)
 
 Deliverable:
 
@@ -321,20 +343,33 @@ Leave workflow operational.
 
 ## Sprint 7 - Payroll Module
 
-Status: Pending
+Status: Completed
 
-Features:
+Completed Features:
 
-* Salary Records
-* Generate Payslip
-* Payroll History
+* Payroll List — ADMIN sees all records; EMPLOYEE sees own only
+* Generate Payroll — ADMIN-only form with employee dropdown, basic salary, allowances, deductions, pay period
+* Automatic net salary calculation: Net = Basic + Allowances − Deductions
+* Payslip View — dynamic page with employee info, salary breakdown, net salary
+* Validation — salary, allowances, deductions must be ≥ 0 (with flash error display)
+* Access control — generate/save routes require ADMIN; list/payslip routes are authenticated with employee-level filtering
 
-Formula:
+Files Modified:
 
-Net Salary =
-Basic Salary +
-Allowance -
-Deduction
+* `model/Payroll.java` — added `status` column (set to "PAID" on generation)
+* `repository/PayrollRepository.java` — added `findAllByOrderByPayDateDesc()` and `findByEmployeeIdOrderByPayDateDesc()`
+* `security/SecurityConfig.java` — split payroll routes: `/generate` and `/save` require ADMIN, others require authentication
+* `templates/payroll/list.html` — replaced mock map fields with entity fields (`pay.employee.firstName`, `pay.basicSalary`, `pay.netSalary`, `pay.allowances`, `pay.deductions`, `pay.payPeriod`, `pay.status`); Generate button only visible to ADMIN via `sec:authorize`
+* `templates/payroll/generate.html` — form binding with employee dropdown from DB, numeric inputs with min=0, validation error/success alerts, CSRF protection
+* `templates/payroll/payslip.html` — replaced mock map references with entity fields; employee name, ID, department, designation from `payslip.employee.*`; salary breakdown from `payslip.basicSalary`, `payslip.allowances`, `payslip.deductions`, `payslip.netSalary`; removed bank/PAN mock data
+
+New Files Created:
+
+* `controller/PayrollController.java` — full CRUD controller:
+  - `list()`: ADMIN sees all, EMPLOYEE sees own via User → Employee mapping
+  - `generateForm()`: passes employee list and empty Payroll object
+  - `save()`: validates ≥ 0, calculates net salary, sets status="PAID" and payDate=now
+  - `payslip()`: loads by ID, enforces employee ownership for non-ADMIN users
 
 Deliverable:
 
@@ -454,7 +489,9 @@ Sprint 2: Complete
 Sprint 3: Complete
 Sprint 4: Complete
 Sprint 5: Complete
+Sprint 6: Complete
+Sprint 7: Complete
 
 ## NEXT SPRINT
 
-Sprint 6 – Leave Module
+Sprint 8 – Reports

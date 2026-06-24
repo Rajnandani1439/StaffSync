@@ -23,9 +23,9 @@
                         </ol>
                     </nav>
                     <h3>Payroll Records</h3>
-                    <p>June 2026 payroll summary</p>
+                    <p>All payroll records</p>
                 </div>
-                <a th:href="@{/payroll/generate}" class="btn btn-primary">
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/payroll/generate}" class="btn btn-primary">
                     <i class="bi bi-plus-lg me-1"></i> Generate Payroll
                 </a>
             </div>
@@ -53,20 +53,20 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="avatar-circle avatar-sm" style="background: #1a56db;"
                                                  th:style="${'background: ' + (pay.id % 2 == 0 ? '#7c3aed' : '#1a56db')}">
-                                                <span th:text="${#strings.substring(pay.employee, 0, 1) + #strings.substring(#arrays.asEnumerable(#strings.split(pay.employee, ' '))[1], 0, 1)}">SJ</span>
+                                                <span th:text="${#strings.substring(pay.employee.firstName, 0, 1) + #strings.substring(pay.employee.lastName, 0, 1)}">SJ</span>
                                             </div>
-                                            <span style="font-weight: 500;" th:text="${pay.employee}">Sarah Johnson</span>
+                                            <span style="font-weight: 500;" th:text="${pay.employee.firstName + ' ' + pay.employee.lastName}">Sarah Johnson</span>
                                         </div>
                                     </td>
-                                    <td th:text="${pay.department}">Engineering</td>
-                                    <td th:text="${pay.month}">June 2026</td>
-                                    <td th:text="${'$' + #numbers.formatDecimal(pay.basic, 0, 'COMMA', 0, 'POINT')}">$85,000</td>
+                                    <td th:text="${pay.employee.department}">Engineering</td>
+                                    <td th:text="${pay.payPeriod}">June 2026</td>
+                                    <td th:text="${'$' + #numbers.formatDecimal(pay.basicSalary, 0, 'COMMA', 0, 'POINT')}">$85,000</td>
                                     <td th:text="${'$' + #numbers.formatDecimal(pay.allowances, 0, 'COMMA', 0, 'POINT')}">$8,500</td>
                                     <td th:text="${'$' + #numbers.formatDecimal(pay.deductions, 0, 'COMMA', 0, 'POINT')}">$4,250</td>
-                                    <td style="font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(pay.net, 0, 'COMMA', 0, 'POINT')}">$89,250</td>
+                                    <td style="font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(pay.netSalary, 0, 'COMMA', 0, 'POINT')}">$89,250</td>
                                     <td>
-                                        <span class="badge-status" th:classappend="${pay.status == 'Paid' ? 'active' : 'pending'}"
-                                              th:text="${pay.status}">Paid</span>
+                                        <span class="badge-status" th:classappend="${pay.status == 'PAID' ? 'active' : 'pending'}"
+                                              th:text="${pay.status}">PAID</span>
                                     </td>
                                     <td>
                                         <a th:href="@{/payroll/payslip/{id}(id=${pay.id})}" class="btn btn-sm btn-outline-primary" title="View Payslip">

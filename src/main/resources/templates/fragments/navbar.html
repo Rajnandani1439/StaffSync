@@ -17,9 +17,11 @@
             <button class="icon-btn">
                 <i class="bi bi-envelope-fill"></i>
             </button>
-            <a th:href="@{/auth/logout}" class="icon-btn" title="Logout">
-                <i class="bi bi-box-arrow-right"></i>
-            </a>
+            <form th:action="@{/auth/logout}" method="post" class="d-inline">
+                <button type="submit" class="icon-btn" title="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </form>
             <div class="avatar">SA</div>
         </div>
     </div>

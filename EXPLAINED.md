@@ -231,7 +231,49 @@ Definition of Done:
 
 ---
 
-## Sprint 4 - Attendance Module
+## Sprint 4 - Authentication & Role Management
+
+Status: Completed
+
+Completed Features:
+
+* Spring Security with form-based login
+* BCrypt password encoding
+* Session-based authentication
+* Login page at `/auth/login`
+* Logout support (POST `/auth/logout`)
+* Role-based access control (ADMIN vs EMPLOYEE)
+* Seeded roles: ADMIN, EMPLOYEE
+* Seeded admin user: `admin` / `admin123`
+
+Access Rules:
+
+* ADMIN: Dashboard, Employees, Attendance, Leave, Payroll, Reports
+* EMPLOYEE: Dashboard only
+
+New Files Created:
+
+* `security/CustomUserDetailsService.java` — loads users from DB
+* `security/SecurityConfig.java` — filter chain, login/logout config
+* `config/DataSeeder.java` — seeds roles and admin on startup
+
+Files Modified:
+
+* `pom.xml` — added spring-boot-starter-security, thymeleaf-extras-springsecurity6
+* `repository/UserRepository.java` — added `findByUsername` with JOIN FETCH
+* `repository/RoleRepository.java` — added `findByName`
+* `controller/AuthController.java` — handles login error/logout params
+* `templates/auth/login.html` — form submits to Spring Security, shows errors
+* `templates/fragments/sidebar.html` — role-based menu visibility with `sec:authorize`
+* `templates/fragments/navbar.html` — logout uses POST form
+
+Deliverable:
+
+Application secured with role-based access.
+
+---
+
+## Sprint 5 - Attendance Module
 
 Status: Pending
 
@@ -247,7 +289,7 @@ Attendance records stored in PostgreSQL.
 
 ---
 
-## Sprint 5 - Leave Module
+## Sprint 6 - Leave Module
 
 Status: Pending
 
@@ -264,7 +306,7 @@ Leave workflow operational.
 
 ---
 
-## Sprint 6 - Payroll Module
+## Sprint 7 - Payroll Module
 
 Status: Pending
 
@@ -287,27 +329,9 @@ Payroll module functional.
 
 ---
 
-## Sprint 7 - Security
-
-Status: Optional
-
-Implement only if time permits.
-
-Roles:
-
-* ADMIN
-* HR
-* EMPLOYEE
-
-Deliverable:
-
-Role-based access control.
-
----
-
 ## Sprint 8 - Reports
 
-Status: Optional
+Status: Pending
 
 Features:
 
@@ -385,10 +409,10 @@ Examiner will likely ask:
 3. Why PostgreSQL?
 4. Explain MVC Architecture.
 5. Explain Entity Relationships.
-6. Explain Attendance Workflow.
-7. Explain Leave Approval Workflow.
-8. Explain Payroll Module.
-9. Explain Security Mechanism.
+6. Explain Security Mechanism (Spring Security, BCrypt, Role-based access).
+7. Explain Attendance Workflow.
+8. Explain Leave Approval Workflow.
+9. Explain Payroll Module.
 10. Explain Future Scope.
 
 All development should support answering these questions.
@@ -415,7 +439,8 @@ END OF FILE
 Sprint 1: Complete
 Sprint 2: Complete
 Sprint 3: Complete
+Sprint 4: Complete
 
 ## NEXT SPRINT
 
-Sprint 4 – Attendance Module
+Sprint 5 – Attendance Module

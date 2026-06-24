@@ -33,7 +33,7 @@
                                 <span th:text="${#strings.substring(employee.firstName, 0, 1) + #strings.substring(employee.lastName, 0, 1)}">SJ</span>
                             </div>
                             <h4 style="font-weight: 700;" th:text="${employee.firstName + ' ' + employee.lastName}">Sarah Johnson</h4>
-                            <p style="color: #64748b;" th:text="${employee.position}">Senior Developer</p>
+                            <p style="color: #64748b;" th:text="${employee.designation}">Senior Developer</p>
                             <span class="badge-status" th:classappend="${employee.status == 'Active' ? 'active' : employee.status == 'On Leave' ? 'on-leave' : 'inactive'}"
                                   th:text="${employee.status}">Active</span>
 
@@ -75,7 +75,7 @@
                             <table class="table table-borderless" style="font-size: 14px;">
                                 <tr>
                                     <td style="width: 180px; color: #64748b; font-weight: 500;">Employee ID</td>
-                                    <td style="font-weight: 600;" th:text="${'EMP-' + #strings.padStart(#strings.replace(#strings.length(employee.id.toString()), '', ''), 3, '0')}">EMP-001</td>
+                                    <td style="font-weight: 600;" th:text="${'EMP-' + #numbers.formatInteger(employee.id, 3)}">EMP-001</td>
                                 </tr>
                                 <tr>
                                     <td style="color: #64748b; font-weight: 500;">Department</td>
@@ -83,7 +83,7 @@
                                 </tr>
                                 <tr>
                                     <td style="color: #64748b; font-weight: 500;">Position</td>
-                                    <td th:text="${employee.position}">Senior Developer</td>
+                                    <td th:text="${employee.designation}">Senior Developer</td>
                                 </tr>
                                 <tr>
                                     <td style="color: #64748b; font-weight: 500;">Hire Date</td>

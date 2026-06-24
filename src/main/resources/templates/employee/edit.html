@@ -27,7 +27,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form>
+                    <form th:action="@{/employees/update/{id}(id=${employee.id})}" th:object="${employee}" method="post">
                         <div class="row g-4 mb-4">
                             <div class="col-12">
                                 <h6 style="font-weight: 700; color: #0f172a;">
@@ -37,23 +37,19 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" th:value="${employee.firstName}">
+                                <input type="text" class="form-control" th:field="*{firstName}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" th:value="${employee.lastName}">
+                                <input type="text" class="form-control" th:field="*{lastName}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" th:value="${employee.email}">
+                                <input type="email" class="form-control" th:field="*{email}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Phone</label>
-                                <input type="text" class="form-control" th:value="${employee.phone}">
-                            </div>
-                            <div class="col-md-8">
-                                <label class="form-label">Address</label>
-                                <input type="text" class="form-control" placeholder="Street address">
+                                <input type="text" class="form-control" th:field="*{phone}">
                             </div>
                         </div>
 
@@ -66,25 +62,32 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Department</label>
-                                <input type="text" class="form-control" th:value="${employee.department}">
+                                <select class="form-select" th:field="*{department}">
+                                    <option value="">Select department</option>
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Operations">Operations</option>
+                                </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Position</label>
-                                <input type="text" class="form-control" th:value="${employee.position}">
+                                <label class="form-label">Designation</label>
+                                <input type="text" class="form-control" th:field="*{designation}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Hire Date</label>
-                                <input type="date" class="form-control" th:value="${employee.hireDate}">
+                                <input type="date" class="form-control" th:field="*{hireDate}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Base Salary ($)</label>
-                                <input type="number" class="form-control" th:value="${employee.salary}">
+                                <input type="number" class="form-control" th:field="*{salary}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Status</label>
-                                <select class="form-select">
-                                    <option th:selected="${employee.status == 'Active'}">Active</option>
-                                    <option th:selected="${employee.status == 'Inactive'}">Inactive</option>
+                                <select class="form-select" th:field="*{status}">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
                                 </select>
                             </div>
                         </div>

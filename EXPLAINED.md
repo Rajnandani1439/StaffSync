@@ -188,54 +188,46 @@ Do not redesign UI unless required for bug fixing.
 
 ## Sprint 2 - Database Foundation
 
-Status: Pending
+Status: Completed
 
-Objective:
+Completed:
 
-Connect PostgreSQL and create entities.
-
-Entities:
-
-* Role
-* User
-* Employee
-* Attendance
-* LeaveRequest
-* Payroll
-
-Tasks:
-
-* Configure PostgreSQL
-* Configure Spring Data JPA
-* Configure Hibernate
-* Create entity relationships
-* Create repositories
-
-Deliverable:
-
-Application starts successfully with database connection.
+* PostgreSQL connected and running
+* Database `staffsync` created
+* Hibernate auto-schema generation working
+* 6 JPA entities created with correct relationships
+* 6 repositories created (1:1 with entities)
+* Application boots successfully on port 8080
+* All 6 tables auto-generated with PKs, FKs, unique constraints, sequences
 
 ---
 
 ## Sprint 3 - Employee CRUD
 
-Status: Pending
+Status: Completed
 
-Objective:
+Completed Features:
 
-Replace dummy employee data with real database data.
+* Employee List — reads from PostgreSQL via `EmployeeRepository.findAll()`
+* Add Employee — form creates new record in DB
+* View Employee — profile page shows DB values
+* Edit Employee — changes persist to PostgreSQL
+* Delete Employee — removes record from DB
 
-Features:
+Changes Made:
 
-* Add Employee
-* View Employee
-* Edit Employee
-* Delete Employee
-* Search Employee
+* Added `status` field to Employee entity (was missing from Sprint 2)
+* Replaced mock `Map<String, Object>` controller with `EmployeeRepository`-backed CRUD
+* Added form binding (`th:object`, `th:field`) to add/edit templates
+* Updated templates: `position` → `designation` to match entity field name
 
-Deliverable:
+Definition of Done:
 
-Employee module fully functional.
+* CRUD working
+* Data stored in PostgreSQL
+* Employee pages connected to database
+* `mvn clean compile` passes
+* Application starts successfully
 
 ---
 
@@ -422,19 +414,8 @@ END OF FILE
 
 Sprint 1: Complete
 Sprint 2: Complete
+Sprint 3: Complete
 
 ## NEXT SPRINT
 
-Sprint 3 – Employee CRUD
-
-Tasks:
-- Employee List from DB
-- Add Employee
-- View Employee
-- Edit Employee
-- Delete Employee
-
-Definition of Done:
-- CRUD working
-- PostgreSQL updated
-- Screenshots captured
+Sprint 4 – Attendance Module

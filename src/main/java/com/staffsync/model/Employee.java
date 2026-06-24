@@ -39,6 +39,9 @@ public class Employee {
     @Column(precision = 10, scale = 2)
     private BigDecimal salary;
 
+    @Column(nullable = false)
+    private String status;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

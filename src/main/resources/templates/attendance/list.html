@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance — StaffSync</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link th:href="@{/css/staffsync.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/navbar :: navbar('Attendance', 'Track employee attendance')}"></div>
+
+        <div class="page-content">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Attendance</li>
+                        </ol>
+                    </nav>
+                    <h3>Attendance Records</h3>
+                    <p>Daily attendance logs for all employees</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/attendance/report}" class="btn btn-outline-primary">
+                        <i class="bi bi-file-text me-1"></i> Monthly Report
+                    </a>
+                    <a th:href="@{/attendance/mark}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg me-1"></i> Mark Attendance
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card green">
+                        <div class="card-body py-3">
+                            <div class="stat-label">Present</div>
+                            <div class="stat-value" style="font-size: 22px;">6</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card" style="--bs-card-color: #f59e0b;">
+                        <div class="card-body py-3">
+                            <div class="stat-label">Late</div>
+                            <div class="stat-value" style="font-size: 22px; color: #f59e0b;">2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card" style="--bs-card-color: #ef4444;">
+                        <div class="card-body py-3">
+                            <div class="stat-label">Absent</div>
+                            <div class="stat-value" style="font-size: 22px; color: #ef4444;">1</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card purple">
+                        <div class="card-body py-3">
+                            <div class="stat-label">Half Day</div>
+                            <div class="stat-value" style="font-size: 22px;">1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="d-flex gap-3 align-items-center">
+                            <h5 style="font-weight: 700; color: #0f172a; margin: 0;">
+                                <i class="bi bi-calendar3 me-2" style="color: var(--primary);"></i>June 23, 2026
+                            </h5>
+                        </div>
+                        <div style="font-size: 13px; color: #64748b;">
+                            Total: 248 &middot; Marked: 140
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Date</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="rec : ${records}">
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-circle avatar-sm" style="background: #1a56db;"
+                                                 th:style="${'background: ' + (rec.id % 2 == 0 ? '#7c3aed' : '#1a56db')}">
+                                                <span th:text="${#strings.substring(rec.employee, 0, 1) + #strings.substring(#arrays.asEnumerable(#strings.split(rec.employee, ' '))[1], 0, 1)}">SJ</span>
+                                            </div>
+                                            <span style="font-weight: 500;" th:text="${rec.employee}">Sarah Johnson</span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${rec.date}">2026-06-23</td>
+                                    <td><span th:text="${rec.checkIn}" style="font-weight: 600;">09:00</span></td>
+                                    <td><span th:text="${rec.checkOut}" style="font-weight: 600;">17:00</span></td>
+                                    <td>
+                                        <span class="badge-status" th:classappend="${rec.status == 'Present' ? 'present' : rec.status == 'Late' ? 'late' : rec.status == 'Absent' ? 'absent' : 'half-day'}"
+                                              th:text="${rec.status}">Present</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

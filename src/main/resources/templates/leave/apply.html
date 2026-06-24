@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Leave — StaffSync</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link th:href="@{/css/staffsync.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/navbar :: navbar('Leave', 'Submit a leave request')}"></div>
+
+        <div class="page-content">
+            <div class="page-header">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/leave}">Leave</a></li>
+                        <li class="breadcrumb-item active">Apply Leave</li>
+                    </ol>
+                </nav>
+                <h3>Apply for Leave</h3>
+                <p>Submit a new leave request</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Employee <span style="color: #ef4444;">*</span></label>
+                                        <select class="form-select">
+                                            <option>Select employee...</option>
+                                            <option>Sarah Johnson — Engineering</option>
+                                            <option>Michael Chen — Marketing</option>
+                                            <option>Emily Rodriguez — Finance</option>
+                                            <option selected>Anna Martinez — Engineering</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Leave Type <span style="color: #ef4444;">*</span></label>
+                                        <select class="form-select">
+                                            <option>Sick Leave</option>
+                                            <option>Casual Leave</option>
+                                            <option>Vacation</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Start Date <span style="color: #ef4444;">*</span></label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">End Date <span style="color: #ef4444;">*</span></label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Reason <span style="color: #ef4444;">*</span></label>
+                                        <textarea class="form-control" rows="4" placeholder="Please provide a detailed reason for your leave request..."></textarea>
+                                    </div>
+                                    <div class="col-12 d-flex gap-2 justify-content-end pt-3 border-top">
+                                        <a th:href="@{/leave}" class="btn btn-secondary">Cancel</a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-send me-1"></i> Submit Request
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 16px;">
+                                <i class="bi bi-info-circle me-2" style="color: var(--primary);"></i>Leave Policy
+                            </h5>
+                            <div style="font-size: 13px; color: #475569;">
+                                <p><strong>Sick Leave:</strong> Up to 12 days/year</p>
+                                <p><strong>Casual Leave:</strong> Up to 10 days/year</p>
+                                <p><strong>Vacation:</strong> Up to 15 days/year</p>
+                                <hr>
+                                <p style="color: #64748b;">
+                                    <i class="bi bi-clock me-1"></i> Submit at least 24 hours in advance
+                                </p>
+                                <p style="color: #64748b;">
+                                    <i class="bi bi-person-check me-1"></i> Requires manager approval
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

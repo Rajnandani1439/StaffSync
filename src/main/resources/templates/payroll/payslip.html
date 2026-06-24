@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip — StaffSync</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link th:href="@{/css/staffsync.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/navbar :: navbar('Payroll', 'View payslip details')}"></div>
+
+        <div class="page-content">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/payroll}">Payroll</a></li>
+                            <li class="breadcrumb-item active">Payslip</li>
+                        </ol>
+                    </nav>
+                    <h3>Salary Slip</h3>
+                    <p th:text="${payslip.month}">June 2026</p>
+                </div>
+                <button class="btn btn-outline-primary no-print" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i> Print Payslip
+                </button>
+            </div>
+
+            <div class="payslip-container">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <!-- Header -->
+                        <div class="payslip-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 44px; height: 44px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px;">
+                                        <i class="bi bi-people-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="font-weight: 700; margin: 0; color: #0f172a;">StaffSync</h4>
+                                        <span style="font-size: 12px; color: #64748b;">Smart HRMS — Official Payslip</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <h5 style="font-weight: 700; color: var(--primary); margin: 0;" th:text="${payslip.month}">June 2026</h5>
+                                <span class="badge-status active" th:text="${payslip.status}">Paid</span>
+                            </div>
+                        </div>
+
+                        <!-- Employee Details -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <table style="font-size: 14px; width: 100%;">
+                                    <tr><td style="color: #64748b; padding: 4px 0; width: 120px;">Employee Name</td><td style="font-weight: 600;" th:text="${payslip.employee}">Sarah Johnson</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Employee ID</td><td style="font-weight: 600;" th:text="${payslip.employeeId}">EMP-001</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Department</td><td style="font-weight: 600;" th:text="${payslip.department}">Engineering</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Designation</td><td style="font-weight: 600;" th:text="${payslip.designation}">Senior Developer</td></tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table style="font-size: 14px; width: 100%;">
+                                    <tr><td style="color: #64748b; padding: 4px 0; width: 120px;">Pay Period</td><td style="font-weight: 600;" th:text="${payslip.month}">June 2026</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Working Days</td><td style="font-weight: 600;" th:text="${payslip.workingDays}">22</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Paid Days</td><td style="font-weight: 600;" th:text="${payslip.paidDays}">22</td></tr>
+                                    <tr><td style="color: #64748b; padding: 4px 0;">Paid Date</td><td style="font-weight: 600;" th:text="${payslip.paidDate}">2026-06-25</td></tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Salary Breakdown -->
+                        <table class="table table-bordered payslip-table">
+                            <thead>
+                                <tr style="background: #f8fafc;">
+                                    <th style="font-size: 13px;">Earnings</th>
+                                    <th style="font-size: 13px; width: 150px; text-align: right;">Amount ($)</th>
+                                    <th style="font-size: 13px; width: 150px;"></th>
+                                    <th style="font-size: 13px; width: 150px; text-align: right;">Amount ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Basic Salary</td>
+                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.basic, 0, 'COMMA', 0, 'POINT')}">85,000</td>
+                                    <td>Income Tax</td>
+                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.deductions, 0, 'COMMA', 0, 'POINT')}">4,250</td>
+                                </tr>
+                                <tr>
+                                    <td>House Rent Allowance</td>
+                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.allowances * 0.5, 0, 'COMMA', 0, 'POINT')}">4,250</td>
+                                    <td>Health Insurance</td>
+                                    <td style="text-align: right;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Travel Allowance</td>
+                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.allowances * 0.3, 0, 'COMMA', 0, 'POINT')}">2,550</td>
+                                    <td>Provident Fund</td>
+                                    <td style="text-align: right;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Special Allowance</td>
+                                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(payslip.allowances * 0.2, 0, 'COMMA', 0, 'POINT')}">1,700</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td style="font-weight: 700;">Gross Earnings</td>
+                                    <td style="text-align: right; font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(payslip.basic + payslip.allowances, 0, 'COMMA', 0, 'POINT')}">$93,500</td>
+                                    <td style="font-weight: 700;">Total Deductions</td>
+                                    <td style="text-align: right; font-weight: 700;" th:text="${'$' + #numbers.formatDecimal(payslip.deductions, 0, 'COMMA', 0, 'POINT')}">$4,250</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Net Salary -->
+                        <div style="background: var(--primary); color: #fff; border-radius: 12px; padding: 20px; text-align: center; margin-top: 20px;">
+                            <div style="font-size: 14px; opacity: 0.9;">Net Salary</div>
+                            <div style="font-size: 36px; font-weight: 800;" th:text="${'$' + #numbers.formatDecimal(payslip.net, 0, 'COMMA', 0, 'POINT')}">$89,250</div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="d-flex justify-content-between mt-4" style="font-size: 13px; color: #94a3b8;">
+                            <div>
+                                <strong>Bank:</strong> <span th:text="${payslip.bankName}">National Bank</span> &middot;
+                                <strong>A/C:</strong> <span th:text="${payslip.accountNo}">XXXX-1234</span>
+                            </div>
+                            <div>
+                                <strong>PAN:</strong> <span th:text="${payslip.panNumber}">ABCDE1234F</span>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
+                            This is a computer-generated payslip. No signature is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center gap-2 mt-4 no-print">
+                    <a th:href="@{/payroll}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Payroll
+                    </a>
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

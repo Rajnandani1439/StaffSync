@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management — StaffSync</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link th:href="@{/css/staffsync.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/navbar :: navbar('Leave Management', 'Manage leave requests')}"></div>
+
+        <div class="page-content">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Leave</li>
+                        </ol>
+                    </nav>
+                    <h3>Leave Requests</h3>
+                    <p><span th:text="${#lists.size(leaves)}">6</span> requests this month</p>
+                </div>
+                <a th:href="@{/leave/apply}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i> Apply Leave
+                </a>
+            </div>
+
+            <div class="filter-tabs mb-4">
+                <span class="filter-btn active">All Requests</span>
+                <span class="filter-btn">Pending (3)</span>
+                <span class="filter-btn">Approved (3)</span>
+                <span class="filter-btn">Rejected (1)</span>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-0">
+                    <div th:each="leave : ${leaves}" style="padding: 16px 22px; border-bottom: 1px solid #f1f5f9;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="avatar-circle" style="background: #0ea5e9;"
+                                     th:style="${'background: ' + (leave.id % 2 == 0 ? '#f59e0b' : leave.id % 3 == 0 ? '#7c3aed' : '#0ea5e9')}">
+                                    <span th:text="${#strings.substring(leave.employee, 0, 1)}">A</span>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #0f172a;" th:text="${leave.employee}">Anna Martinez</div>
+                                    <div style="font-size: 13px; color: #64748b;">
+                                        <span th:text="${leave.type}">Sick</span> &middot;
+                                        <span th:text="${leave.from}">Jun 20</span> to <span th:text="${leave.to}">Jun 24</span> &middot;
+                                        Applied <span th:text="${leave.applied}">Jun 18</span>
+                                    </div>
+                                    <div style="font-size: 13px; color: #94a3b8; margin-top: 4px;">
+                                        <i class="bi bi-chat-quote me-1"></i><span th:text="${leave.reason}">Medical appointment</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="badge-status" th:classappend="${leave.status == 'Approved' ? 'active' : leave.status == 'Pending' ? 'pending' : 'inactive'}"
+                                      th:text="${leave.status}">Pending</span>
+                                <div class="d-flex gap-1" th:if="${leave.status == 'Pending'}">
+                                    <button class="btn btn-sm btn-success" title="Approve">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" title="Reject">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<th:block th:fragment="navbar(pageTitle, pageSubtitle)">
+    <div class="top-navbar">
+        <div class="page-title d-flex align-items-center gap-3">
+            <button class="icon-btn d-md-none" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h4 th:text="${pageTitle}">Dashboard</h4>
+                <span th:text="${pageSubtitle}">Overview of your organization</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button class="icon-btn">
+                <i class="bi bi-bell-fill"></i>
+                <span class="badge-dot"></span>
+            </button>
+            <button class="icon-btn">
+                <i class="bi bi-envelope-fill"></i>
+            </button>
+            <a th:href="@{/auth/logout}" class="icon-btn" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+            <div class="avatar">SA</div>
+        </div>
+    </div>
+</th:block>

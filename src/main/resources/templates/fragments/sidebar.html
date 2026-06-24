@@ -1,0 +1,55 @@
+<th:block th:fragment="sidebar">
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-3">
+            <div class="brand-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h5>StaffSync</h5>
+                <small>Smart HRMS</small>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-label">Main Menu</div>
+
+            <a th:href="@{/dashboard}" class="nav-item" th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+            <a th:href="@{/employees}" class="nav-item" th:classappend="${currentPage == 'employees' ? 'active' : ''}">
+                <i class="bi bi-person-badge-fill"></i>
+                <span>Employees</span>
+            </a>
+            <a th:href="@{/attendance}" class="nav-item" th:classappend="${currentPage == 'attendance' ? 'active' : ''}">
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Attendance</span>
+            </a>
+            <a th:href="@{/leave}" class="nav-item" th:classappend="${currentPage == 'leave' ? 'active' : ''}">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <span>Leave</span>
+            </a>
+
+            <div class="menu-label mt-3">Finance</div>
+
+            <a th:href="@{/payroll}" class="nav-item" th:classappend="${currentPage == 'payroll' ? 'active' : ''}">
+                <i class="bi bi-wallet-fill"></i>
+                <span>Payroll</span>
+            </a>
+            <a th:href="@{/reports}" class="nav-item" th:classappend="${currentPage == 'reports' ? 'active' : ''}">
+                <i class="bi bi-graph-up-arrow"></i>
+                <span>Reports</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle" style="background: var(--primary);">SA</div>
+                <div class="user-info">
+                    <strong>Admin User</strong>
+                    <span><i class="bi bi-shield-fill-check me-1" style="font-size: 11px;"></i> Administrator</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</th:block>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees — StaffSync</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link th:href="@{/css/staffsync.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/navbar :: navbar('Employees', 'Manage your workforce')}"></div>
+
+        <div class="page-content">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Employees</li>
+                        </ol>
+                    </nav>
+                    <h3>All Employees</h3>
+                    <p><span th:text="${#lists.size(employees)}">12</span> employees registered</p>
+                </div>
+                <div>
+                    <a th:href="@{/employees/add}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg me-1"></i> Add Employee
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="search-box" style="width: 320px;">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control" placeholder="Search employees...">
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select class="form-select" style="width: auto;">
+                                <option>All Departments</option>
+                                <option>Engineering</option>
+                                <option>Marketing</option>
+                                <option>Finance</option>
+                                <option>HR</option>
+                                <option>Operations</option>
+                            </select>
+                            <select class="form-select" style="width: auto;">
+                                <option>All Status</option>
+                                <option>Active</option>
+                                <option>On Leave</option>
+                                <option>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Department</th>
+                                    <th>Position</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Salary</th>
+                                    <th>Status</th>
+                                    <th style="width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="emp : ${employees}">
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-circle" style="background: #1a56db;"
+                                                 th:style="${'background: ' + (emp.id % 2 == 0 ? '#7c3aed' : emp.id % 3 == 0 ? '#0ea5e9' : '#1a56db')}">
+                                                <span th:text="${#strings.substring(emp.firstName, 0, 1) + #strings.substring(emp.lastName, 0, 1)}">SJ</span>
+                                            </div>
+                                            <div>
+                                                <a th:href="@{/employees/{id}(id=${emp.id})}" style="font-weight: 600; color: #0f172a;"
+                                                   th:text="${emp.firstName + ' ' + emp.lastName}">Sarah Johnson</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${emp.department}">Engineering</td>
+                                    <td th:text="${emp.position}">Senior Developer</td>
+                                    <td th:text="${emp.email}" style="font-size: 13px;">sarah@email.com</td>
+                                    <td th:text="${emp.phone}" style="font-size: 13px;">+1 555-0101</td>
+                                    <td style="font-weight: 600;" th:text="${'$' + #numbers.formatDecimal(emp.salary, 0, 'COMMA', 0, 'POINT')}">$85,000</td>
+                                    <td>
+                                        <span class="badge-status" th:classappend="${emp.status == 'Active' ? 'active' : emp.status == 'On Leave' ? 'on-leave' : 'inactive'}"
+                                              th:text="${emp.status}">Active</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a th:href="@{/employees/{id}(id=${emp.id})}" class="btn btn-sm btn-outline-primary" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a th:href="@{/employees/edit/{id}(id=${emp.id})}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span style="font-size: 13px; color: #64748b;">Showing 1 to <span th:text="${#lists.size(employees)}">12</span> entries</span>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

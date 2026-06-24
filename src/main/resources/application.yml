@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/staffsync
     username: postgres
-    password: postgres
+    password: 773030
     driver-class-name: org.postgresql.Driver
 
   jpa:

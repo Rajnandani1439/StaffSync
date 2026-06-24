@@ -377,22 +377,40 @@ Payroll module functional.
 
 ---
 
-## Sprint 8 - Reports
+## Sprint 8 - Dashboard Statistics & Reports
 
-Status: Pending
+Status: Completed
 
-Features:
+Completed Features:
 
-* Employee Report
-* Attendance Report
-* Leave Report
-* Payroll Report
+* Dashboard Statistics — all four stat cards now show real DB counts (Total Employees, Present Today, Pending Leaves, On Leave)
+* Dashboard Recent Activity — latest 5 records from employees, leaves, and payroll displayed dynamically
+* Department Stats — groups employees by department with counts from DB
+* Reports Page — four report sections with real database values:
+  - Employee Report: department-wise total and active employee counts
+  - Attendance Report: today's present, absent, and late counts
+  - Leave Report: pending, approved, and rejected leave counts
+  - Payroll Report: total payroll records and total net salary amount
+* Attendance Summary — current month's attendance percentages (present, late, absent) with progress bar
 
-Simple tables are sufficient.
+Files Modified:
 
-Charts are optional.
+* `controller/DashboardController.java` — injected 4 repositories; replaced all mock Map data with real `count()`, `countByStatus()`, `countByDateAndStatus()`, `findTop5ByOrderBy...Desc()` queries; recent activities built from latest employees, leaves, and payroll records; department stats from `findDistinctDepartments()` + `findByDepartment()`
+* `controller/ReportController.java` — injected 4 repositories; replaced all mock Map data with real statistics; added `sumNetSalary()`, leave/attendance counts by status, attendance summary percentages
+* `repository/EmployeeRepository.java` — added `countByStatus()`, `findDistinctDepartments()`, `findByDepartment()`, `findTop5ByOrderByIdDesc()`
+* `repository/LeaveRequestRepository.java` — added `countByStatus()`, `findTop5ByOrderByAppliedOnDesc()`
+* `repository/PayrollRepository.java` — added `sumNetSalary()` via `@Query`, `findTop5ByOrderByPayDateDesc()`
+* `templates/dashboard/dashboard.html` — no changes needed (already used dynamic `th:text` attributes)
+* `templates/report/reports.html` — replaced mock summary cards with real payroll total and attendance average; replaced mock tables with Employee Report (dept-wise), Payroll Report (records + amount), Attendance Report (present/absent/late counts), Leave Report (pending/approved/rejected counts); kept Attendance Summary with real percentage calculations
 
----
+Security:
+
+* `/reports/**` already requires ADMIN role (unchanged)
+* Dashboard accessible to all authenticated users (unchanged)
+
+Deliverable:
+
+Dashboard and Reports connected to PostgreSQL with dynamic statistics.
 
 # Development Rules
 
@@ -491,7 +509,8 @@ Sprint 4: Complete
 Sprint 5: Complete
 Sprint 6: Complete
 Sprint 7: Complete
+Sprint 8: Complete
 
 ## NEXT SPRINT
 
-Sprint 8 – Reports
+All sprints completed.

@@ -33,7 +33,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <div class="stat-label">Total Employees</div>
-                                    <div class="stat-value" style="font-size: 24px;" th:text="${totalEmployees}">248</div>
+                                    <div class="stat-value" style="font-size: 24px;" th:text="${totalEmployees}">0</div>
                                 </div>
                                 <div class="stat-icon" style="width: 40px; height: 40px; font-size: 18px;">
                                     <i class="bi bi-people-fill"></i>
@@ -48,7 +48,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <div class="stat-label">Active Employees</div>
-                                    <div class="stat-value" style="font-size: 24px;" th:text="${activeEmployees}">235</div>
+                                    <div class="stat-value" style="font-size: 24px;" th:text="${activeEmployees}">0</div>
                                 </div>
                                 <div class="stat-icon" style="width: 40px; height: 40px; font-size: 18px;">
                                     <i class="bi bi-person-check-fill"></i>
@@ -62,8 +62,8 @@
                         <div class="card-body py-3">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <div class="stat-label">Monthly Payroll</div>
-                                    <div class="stat-value" style="font-size: 24px;" th:text="${'$' + #numbers.formatDecimal(monthlyPayrollTotal, 0, 'COMMA', 0, 'POINT')}">$17,080,000</div>
+                                    <div class="stat-label">Total Payroll</div>
+                                    <div class="stat-value" style="font-size: 24px;" th:text="${'$' + #numbers.formatDecimal(totalPayroll, 0, 'COMMA', 0, 'POINT')}">$0</div>
                                 </div>
                                 <div class="stat-icon" style="width: 40px; height: 40px; font-size: 18px;">
                                     <i class="bi bi-wallet-fill"></i>
@@ -78,7 +78,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <div class="stat-label">Avg. Attendance</div>
-                                    <div class="stat-value" style="font-size: 24px;" th:text="${avgAttendance + '%'}">93.2%</div>
+                                    <div class="stat-value" style="font-size: 24px;" th:text="${avgAttendance + '%'}">0%</div>
                                 </div>
                                 <div class="stat-icon" style="width: 40px; height: 40px; font-size: 18px;">
                                     <i class="bi bi-graph-up-arrow"></i>
@@ -90,12 +90,12 @@
             </div>
 
             <div class="row g-4">
-                <!-- Department Wise -->
+                <!-- Employee Report -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 16px;">
-                                <i class="bi bi-building me-2" style="color: var(--primary);"></i>Department Wise Report
+                                <i class="bi bi-building me-2" style="color: var(--primary);"></i>Employee Report
                             </h5>
                             <div class="table-container">
                                 <table class="table">
@@ -104,15 +104,13 @@
                                             <th>Department</th>
                                             <th>Total</th>
                                             <th>Active</th>
-                                            <th>Monthly Payroll</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr th:each="dept : ${deptWise}">
                                             <td style="font-weight: 600;" th:text="${dept.department}">Engineering</td>
-                                            <td th:text="${dept.total}">78</td>
-                                            <td th:text="${dept.active}">76</td>
-                                            <td th:text="${'$' + #numbers.formatDecimal(dept.payroll, 0, 'COMMA', 0, 'POINT')}">$6,120,000</td>
+                                            <td th:text="${dept.total}">0</td>
+                                            <td th:text="${dept.active}">0</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -121,32 +119,99 @@
                     </div>
                 </div>
 
-                <!-- Monthly Payroll Trend -->
+                <!-- Payroll Report -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 16px;">
-                                <i class="bi bi-graph-up me-2" style="color: var(--primary);"></i>Monthly Payroll Trend
+                                <i class="bi bi-wallet me-2" style="color: var(--primary);"></i>Payroll Report
                             </h5>
                             <div class="table-container">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Month</th>
-                                            <th>Total Payroll</th>
-                                            <th>vs Previous</th>
+                                            <th>Metric</th>
+                                            <th>Value</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="row : ${monthlyPayroll}">
-                                            <td style="font-weight: 600;" th:text="${row.month}">Jan 2026</td>
-                                            <td th:text="${'$' + #numbers.formatDecimal(row.amount, 0, 'COMMA', 0, 'POINT')}">$16,780,000</td>
-                                            <td>
-                                                <span th:if="${rowStat != null}" class="badge-status active">
-                                                    <i class="bi bi-arrow-up-short"></i> 2.3%
-                                                </span>
-                                                <span th:if="${rowStat == null}" style="color: #94a3b8; font-size: 12px;">Baseline</span>
-                                            </td>
+                                        <tr>
+                                            <td>Total Payroll Records</td>
+                                            <td style="font-weight: 600;" th:text="${totalPayrollRecords}">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Payroll Amount</td>
+                                            <td style="font-weight: 600;" th:text="${'$' + #numbers.formatDecimal(totalPayroll, 0, 'COMMA', 0, 'POINT')}">$0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Report -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 16px;">
+                                <i class="bi bi-calendar-check me-2" style="color: var(--primary);"></i>Attendance Report
+                            </h5>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-weight: 600; color: #16a34a;">Present</td>
+                                            <td th:text="${presentCount}">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: 600; color: #ef4444;">Absent</td>
+                                            <td th:text="${absentCount}">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: 600; color: #f59e0b;">Late</td>
+                                            <td th:text="${lateCount}">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leave Report -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 16px;">
+                                <i class="bi bi-file-earmark-text me-2" style="color: var(--primary);"></i>Leave Report
+                            </h5>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-weight: 600; color: #f59e0b;">Pending</td>
+                                            <td th:text="${pendingLeaves}">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: 600; color: #16a34a;">Approved</td>
+                                            <td th:text="${approvedLeaves}">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: 600; color: #ef4444;">Rejected</td>
+                                            <td th:text="${rejectedLeaves}">0</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -160,7 +225,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 16px;">
-                                <i class="bi bi-calendar-check me-2" style="color: var(--primary);"></i>Attendance Summary (2026)
+                                <i class="bi bi-graph-up me-2" style="color: var(--primary);"></i>Attendance Summary
                             </h5>
                             <div class="table-container">
                                 <table class="table">
@@ -176,14 +241,14 @@
                                     <tbody>
                                         <tr th:each="row : ${attendanceSummary}">
                                             <td style="font-weight: 600;" th:text="${row.month}">Jan 2026</td>
-                                            <td style="font-weight: 600; color: #16a34a;" th:text="${row.avgPresent + '%'}">93.5%</td>
-                                            <td style="color: #f59e0b;" th:text="${row.avgLate + '%'}">4.2%</td>
-                                            <td style="color: #ef4444;" th:text="${row.avgAbsent + '%'}">2.3%</td>
+                                            <td style="font-weight: 600; color: #16a34a;" th:text="${row.avgPresent + '%'}">0%</td>
+                                            <td style="color: #f59e0b;" th:text="${row.avgLate + '%'}">0%</td>
+                                            <td style="color: #ef4444;" th:text="${row.avgAbsent + '%'}">0%</td>
                                             <td>
                                                 <div class="progress" style="height: 6px; max-width: 200px;">
                                                     <div class="progress-bar bg-success" role="progressbar"
                                                          th:style="${'width: ' + row.avgPresent + '%'}"
-                                                         style="width: 93%;"></div>
+                                                         style="width: 0%;"></div>
                                                 </div>
                                             </td>
                                         </tr>

@@ -8,4 +8,6 @@ import java.util.List;
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
     List<LeaveRequest> findAllByOrderByStartDateDesc();
     List<LeaveRequest> findByEmployeeIdOrderByStartDateDesc(Long employeeId);
+    long countByStatus(String status);
+    List<LeaveRequest> findTop5ByOrderByAppliedOnDesc();
 }
